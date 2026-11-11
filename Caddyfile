@@ -23,6 +23,13 @@ gauge.sunar.dev {
 	reverse_proxy simple-gauge:80
 }
 
+# Sandika PWA Checkout portfolio demo (mock data, no Magento). The container
+# joins the `web` network as `sandika-checkout` (see sandika-pwacheckout/compose.yaml
+# on the portfolio-demo branch) and serves static files on :80.
+checkout.sunar.dev {
+	reverse_proxy sandika-checkout:80
+}
+
 # --- koi-store dev stack -----------------------------------------------------
 # koi-store's app container joins the `web` network as `koi-app` (see
 # koi-store/compose.yaml), so it is reachable by name like router and headroom.
