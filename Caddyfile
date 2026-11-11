@@ -1,0 +1,46 @@
+www.sunar.dev {
+    redir https://sunar.dev{uri} permanent
+}
+
+# Personal site — static files straight from ~/apps/_me (mounted read-only).
+sunar.dev {
+    root * /srv/_me
+    file_server
+    encode zstd gzip
+}
+
+router.sunar.dev {
+    reverse_proxy 9router:20128
+}
+
+headroom.sunar.dev {
+    reverse_proxy headroom:8787
+}
+
+# --- koi-store dev stack -----------------------------------------------------
+# koi-store's app container joins the `web` network as `koi-app` (see
+# koi-store/compose.yaml), so it is reachable by name like router and headroom.
+
+# Storefront (Next.js dev server on :3001).
+koi.sunar.dev {
+    reverse_proxy koi-app:3001
+}
+
+# Mercur serves both panels *through the API* at :9000 — admin at /dashboard,
+# vendor at /seller — and proxies them to its in-process Vite dev servers.
+# Going through :9000 rather than :7000/:7001 keeps the panel and its API
+# same-origin, which is what the panels' CORS and backend URL expect.
+#
+# Everything goes to :9000 unrewritten on purpose. The panel calls the API at
+# /admin/… on its own origin, so a rewrite of `*` would send that to
+# /dashboard/admin/… and 404 it. The cost is that the panel itself lives at
+# /dashboard rather than /, which is exactly how it works on localhost:9000.
+koi-backoffice.sunar.dev {
+    redir / /dashboard 302
+    reverse_proxy koi-app:9000
+}
+
+koi-seller.sunar.dev {
+    redir / /seller 302
+    reverse_proxy koi-app:9000
+}
