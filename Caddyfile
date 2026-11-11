@@ -17,6 +17,12 @@ headroom.sunar.dev {
     reverse_proxy headroom:8787
 }
 
+# Simple Gauge portfolio demo. The container joins the `web` network as
+# `simple-gauge` (see simple-gauge/compose.yaml) and serves static files on :80.
+gauge.sunar.dev {
+    reverse_proxy simple-gauge:80
+}
+
 # --- koi-store dev stack -----------------------------------------------------
 # koi-store's app container joins the `web` network as `koi-app` (see
 # koi-store/compose.yaml), so it is reachable by name like router and headroom.
