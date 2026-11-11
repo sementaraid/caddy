@@ -1,26 +1,26 @@
 www.sunar.dev {
-    redir https://sunar.dev{uri} permanent
+	redir https://sunar.dev{uri} permanent
 }
 
 # Personal site — static files straight from ~/apps/_me (mounted read-only).
 sunar.dev {
-    root * /srv/_me
-    file_server
-    encode zstd gzip
+	root * /srv/_me
+	file_server
+	encode zstd gzip
 }
 
 router.sunar.dev {
-    reverse_proxy 9router:20128
+	reverse_proxy 9router:20128
 }
 
 headroom.sunar.dev {
-    reverse_proxy headroom:8787
+	reverse_proxy headroom:8787
 }
 
 # Simple Gauge portfolio demo. The container joins the `web` network as
 # `simple-gauge` (see simple-gauge/compose.yaml) and serves static files on :80.
 gauge.sunar.dev {
-    reverse_proxy simple-gauge:80
+	reverse_proxy simple-gauge:80
 }
 
 # --- koi-store dev stack -----------------------------------------------------
@@ -29,7 +29,7 @@ gauge.sunar.dev {
 
 # Storefront (Next.js dev server on :3001).
 koi.sunar.dev {
-    reverse_proxy koi-app:3001
+	reverse_proxy koi-app:3001
 }
 
 # Mercur serves both panels *through the API* at :9000 — admin at /dashboard,
@@ -42,11 +42,11 @@ koi.sunar.dev {
 # /dashboard/admin/… and 404 it. The cost is that the panel itself lives at
 # /dashboard rather than /, which is exactly how it works on localhost:9000.
 koi-backoffice.sunar.dev {
-    redir / /dashboard 302
-    reverse_proxy koi-app:9000
+	redir / /dashboard 302
+	reverse_proxy koi-app:9000
 }
 
 koi-seller.sunar.dev {
-    redir / /seller 302
-    reverse_proxy koi-app:9000
+	redir / /seller 302
+	reverse_proxy koi-app:9000
 }
