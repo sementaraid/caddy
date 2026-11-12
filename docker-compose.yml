@@ -3,6 +3,10 @@ services:
     image: caddy:2
     container_name: caddy
     restart: unless-stopped
+    # Optional secrets for the Caddyfile (e.g. the signals.sunar.dev login). See .env.example.
+    env_file:
+      - path: ./.env
+        required: false
     ports:
       - "80:80"
       - "443:443"
