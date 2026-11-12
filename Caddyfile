@@ -57,3 +57,20 @@ koi-seller.sunar.dev {
 	redir / /seller 302
 	reverse_proxy koi-app:9000
 }
+
+# --- crypto-signals ----------------------------------------------------------
+# Trading dashboard + API. The container joins the `web` network as
+# `crypto-signals` (see crypto-signals/compose.prod.yaml) and listens on :8000.
+#
+# Password protected. The login comes from .env (git-ignored, see .env.example):
+#   SIGNALS_USER=admin
+#   SIGNALS_PASSWORD_HASH='<output of: docker run --rm caddy:2 caddy hash-password>'
+# Without .env the default hash below belongs to a random throwaway password,
+# so the site stays locked instead of open, and the other sites keep working.
+signals.sunar.dev {
+	basic_auth {
+		{$SIGNALS_USER:admin} {$SIGNALS_PASSWORD_HASH:$2a$14$ucCNrcMkWT5w6.zfolioNuJLMMsdhGt146p1qgsRrr/Jb3XrkvbNO}
+	}
+	encode zstd gzip
+	reverse_proxy crypto-signals:8000
+}
